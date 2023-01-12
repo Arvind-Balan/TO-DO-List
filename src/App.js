@@ -1,23 +1,89 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./App.css";
+import { useState } from "react";
 
 function App() {
+  const [toDos, setToDos] = useState([]);
+  const [toDo, setToDo] = useState("");
+
+  // console.log(today);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      <div className="mainHeading">
+        <h1>ToDo List</h1>
+      </div>
+      <div className="subHeading">
+        <br />
+        <h2>Happy Monday</h2>
+      </div>
+      <div className="input">
+        <input
+          value={toDo}
+          onChange={(e) => setToDo(e.target.value)}
+          type="text"
+          placeholder="🖊️ Add item..."
+        />
+        <i
+          onClick={() => {
+            if (toDo === "") {
+              alert("Enter something you wanna do...!");
+            } else {
+              setToDos([
+                ...toDos,
+                { id: Date.now(), status: false, text: toDo },
+              ]);
+              setToDo("");
+            }
+          }}
+          className="fas fa-plus"
+        ></i>
+      </div>
+      <div className="todos">
+        {toDos.map((val) => {
+          return (
+            <div className="todo">
+              <div className="left">
+                <input
+                  onChange={(e) => {
+                    // console.log(e.target.checked);
+                    // console.log(val);
+                    setToDos(
+                      toDos.filter((obj) => {
+                        if (obj.id === val.id) {
+                          obj.status = e.target.checked;
+                        }
+                        return obj;
+                      })
+                    );
+                  }}
+                  value={val.status}
+                  type="checkbox"
+                  name=""
+                  id=""
+                />
+                <p>{val.text}</p>
+                <h1>Active Task</h1>
+              </div>
+              <div onClick={()=>{
+                setToDos(toDos.filter(obj=>{
+                  if(obj.id !== val.id){
+                    return obj
+                  }
+                }))
+              }} className="right">
+                <i className="fas fa-times"></i>
+              </div>
+            </div>
+          );
+        })}
+              {toDos.map((value) => {
+          if (value.status) {
+            return <h1 style={{ color: "white" }}>{value.text}</h1>;
+          } else {
+            return null;
+          }
+        })}
+      </div>
     </div>
   );
 }
